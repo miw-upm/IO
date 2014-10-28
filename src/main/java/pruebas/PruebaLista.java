@@ -8,7 +8,7 @@ public class PruebaLista {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		IO.out.println(IO.in.read("java.util.Set<String>", "Colección"));
+		IO.getIO().println(IO.getIO().read("java.util.Set<String>", "Colecciï¿½n"));
 	}
 
 }

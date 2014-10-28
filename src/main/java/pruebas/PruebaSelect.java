@@ -12,12 +12,12 @@ public class PruebaSelect {
 		//seleccion[2]= new User(3,3,3);
 		//Boolean[] seleccion = {true,false};
 		Integer[] seleccion ={1,2,3,4,5};
-		Object obj=IO.in.select(seleccion, "Select");
-		IO.out.println(obj);
-		Object obj2=IO.in.select(10, "Select");
-		IO.out.println(obj2);
-		Object obj3=IO.in.select(18,30, "Select");
-		IO.out.println(obj3);
+		Object obj=IO.getIO().select(seleccion, "Select");
+		IO.getIO().println(obj);
+		Object obj2=IO.getIO().select(10, "Select");
+		IO.getIO().println(obj2);
+		Object obj3=IO.getIO().select(18,30, "Select");
+		IO.getIO().println(obj3);
 	}
 
 }

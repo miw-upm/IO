@@ -9,8 +9,8 @@ public class PruebaFile {
 	 */
 	public static void main(String[] args) {
 		String[] exts={"pdf"};
-		IO.out.println(IO.in.readOpenFile("doc",exts));
-		IO.out.println(IO.in.readSaveFile());
+		IO.getIO().println(IO.getIO().readOpenFile("doc",exts));
+		IO.getIO().println(IO.getIO().readSaveFile());
 	}
 
 }

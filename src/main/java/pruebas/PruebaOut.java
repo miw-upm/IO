@@ -4,10 +4,10 @@ import upm.jbb.IO;
 
 public class PruebaOut {
 	public static void main(String[] args) {
-		IO.out.println("pp111");
-		System.out.println("pidsòfñafh");
-		IO.out.println("pp111");
-		System.out.println("pidsòfñafh");
+		IO.getIO().println("pp111");
+		System.out.println("pidsï¿½fï¿½afh");
+		IO.getIO().println("pp111");
+		System.out.println("pidsï¿½fï¿½afh");
 	}
 
 }

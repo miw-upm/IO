@@ -5,7 +5,7 @@ import upm.jbb.IO;
 public class PruebaObject {
 
 	public static void main(String[] args) {
-		IO.out.println(IO.in.read("Object","Es Object"));
+		IO.getIO().println(IO.getIO().read("Object","Es Object"));
 
 	}
 

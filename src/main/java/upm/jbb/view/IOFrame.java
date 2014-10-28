@@ -208,7 +208,7 @@ public class IOFrame extends JFrame implements ActionListener, WindowListener {
 		//this.pnlToolBarTabbed.add(name,pnlToolBar);
 	}
 
-	public void addModelo(Object modelo) {
+	public void addViewPanel(Object modelo) {
 		MultipleMethodInputTab mmi = new MultipleMethodInputTab(new MethodBuilder(modelo).create(), this.io);
 		this.pestania.addTab(modelo.getClass().getName(), mmi);
 	}
@@ -267,9 +267,9 @@ public class IOFrame extends JFrame implements ActionListener, WindowListener {
 			JOptionPane.showMessageDialog(this, VERSION, "Acerca De", JOptionPane.INFORMATION_MESSAGE);
 			// ------ Open File...------------------------------------
 		} else if (ae.getActionCommand().equals("Add Controler")) {
-			io.addController(this.io.read("Object", "Actions"));
+			io.addview(this.io.read("Object", "Actions"));
 		} else if (ae.getActionCommand().equals("Add Model")) {
-			io.addModel(this.io.read("Object", "Model"));
+			io.addViewPanel(this.io.read("Object", "Model"));
 		}
 	}
 

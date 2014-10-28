@@ -5,8 +5,8 @@ import upm.jbb.IO;
 public class PruebaControlador {
 
 	public static void main(String[] args) {
-		IO.in.addController(new Contro2());
-		IO.in.addController(new Controlador(),false);
+		IO.getIO().addview(new Contro2());
+		IO.getIO().addView(new Controlador(),false);
 	}
 
 }

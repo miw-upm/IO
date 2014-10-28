@@ -1,6 +1,8 @@
 package upm.jbb;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JFileChooser;
 
@@ -21,362 +23,381 @@ import upm.jbb.view.input.FactoryInputPanel;
 import upm.jbb.view.input.InputPanel;
 
 public class IO {
-	public static IO in;
-	public static IO out;
-	static {
-		in = new IO("Input/Output");
-		out = in;
-	}
+    private static final Map<String, IO> ios = new HashMap<>();
 
-	private IOFrame ioFrame;
-	private Log log, printLog;
-	private JFileChooser chooser;
+    private IOFrame ioFrame;
 
-	public IO(String tittle) {
-		this.ioFrame = new IOFrame(tittle, this);
-		this.log = this.printLog = Log.INFO;
-		this.chooser = new JFileChooser();
-	}
+    private Log log, printLog;
 
-	public IOFrame getIoFrame() {
-		return ioFrame;
-	}
+    private JFileChooser chooser;
 
-	public JFileChooser getChooser() {
-		return chooser;
-	}
+    public IO(String tittle) {
+        this.ioFrame = new IOFrame(tittle, this);
+        this.log = this.printLog = Log.INFO;
+        this.chooser = new JFileChooser();
+    }
 
-	// ====================== Lecturas======================
-	/**
-	 * Lee una clase
-	 * 
-	 * @param clase
-	 *           Nombre de la clase que se quiere leer
-	 * @param msg
-	 *           Mensaje asociado
-	 * @return Instancia de la clase leida, o null si existen errores o se
-	 *         canceló
-	 */
-	public Object read(String clase, String msg) {
-		InputType type = new InputType(clase, msg);
-		return this.readType(type);
-	}
+    public static IO getIO(String key) {
+        if (!ios.containsKey(key)) {
+            ios.put(key, new IO(key));
+        }
+        return ios.get(key);
+    }
+    
+    public static IO getIO() {
+        return IO.getIO("Input/Output");
+    }
 
-	public Object read(Class<?> clase, String msg) {
-		return this.read(clase.getName(), msg);
-	}
+    public IOFrame getIoFrame() {
+        return ioFrame;
+    }
 
-	/**
-	 * @param obj
-	 *           Objeto que se quiere leer, se utiliza como valor inicial. Sólo
-	 *           funciona con los Wrappers
-	 * @param msg
-	 * @return
-	 */
-	public Object read(Object obj, String msg) {
-		InputType type = new InputType(obj.getClass().getName(), msg);
-		type.setValue(obj);
-		return this.readType(type);
-	}
+    public JFileChooser getChooser() {
+        return chooser;
+    }
 
-	private Object readType(InputType type) {
-		if (type.isSingle() || type.isCollection() || type.isArray() || type.isObject()) {
+    // ====================== Lecturas======================
+    /**
+     * Lee una clase
+     * 
+     * @param clase Nombre de la clase que se quiere leer
+     * @param msg Mensaje asociado
+     * @return Instancia de la clase leida, o null si existen errores o se
+     *         cancelï¿½
+     */
+    public Object read(String clase, String msg) {
+        InputType type = new InputType(clase, msg);
+        return this.readType(type);
+    }
 
-			new SingleDialog(this.ioFrame, this.ioFrame.getTitle(), new FactoryInputPanel().getInputPanel(type, this))
-					.setVisible(true);
-			return type.getValue();
-		} else {
-			ConstructorBuilder constructorBuilder = new ConstructorBuilder(type.getType());
-			CollectionOfAbstracMethod constructores = constructorBuilder.create();
-			if (constructores == null) return null;
-			if (constructores.getList().size() == 0) {
-				System.out.println("WARNING (IO): Clase sin constructores públicos: " + type.getType());
-				return null;
-			}
-			MultipleMethodInputTab mmi = new MultipleMethodInputTab(constructores, this);
-			MethodDialog dlg = new MethodDialog(this.ioFrame, this.ioFrame.getTitle() + " (" + type.getType() + " - "
-					+ type.getMsg() + ")", mmi, true);
-			// dlg.pack();
-			dlg.setVisible(true);
-			if (dlg.isSetters()) {
-				if (constructores.getActive() == null) {
+    public Object read(Class<?> clase, String msg) {
+        return this.read(clase.getName(), msg);
+    }
 
-				} else
-					this.setters(constructores.getActive().getReturnValue(), type.getType() + " - " + type.getMsg());
-			}
-			dlg.dispose();
-			ioFrame.removeLocationDialog();
-			if (constructores.getActive() == null) return null;
-			return constructores.getActive().getReturnValue();
-		}
-	}
+    /**
+     * @param obj Objeto que se quiere leer, se utiliza como valor inicial. Sï¿½lo
+     *            funciona con los Wrappers
+     * @param msg
+     * @return
+     */
+    public Object read(Object obj, String msg) {
+        InputType type = new InputType(obj.getClass().getName(), msg);
+        type.setValue(obj);
+        return this.readType(type);
+    }
 
-	/**
-	 * @param clases
-	 * @return
-	 */
-	public Object[] readForm(String[] clases) {
-		return this.readForm(clases, clases);
-	}
+    private Object readType(InputType type) {
+        if (type.isSingle() || type.isCollection() || type.isArray() || type.isObject()) {
 
-	public Object[] readForm(Class<?>[] clases) {
-		return this.readForm(clases, null);
-	}
-	
-	public Object[] readForm(Object[] clases) {
-		return this.readForm(clases, null);
-	}
+            new SingleDialog(this.ioFrame, this.ioFrame.getTitle(),
+                    new FactoryInputPanel().getInputPanel(type, this)).setVisible(true);
+            return type.getValue();
+        } else {
+            ConstructorBuilder constructorBuilder = new ConstructorBuilder(type.getType());
+            CollectionOfAbstracMethod constructores = constructorBuilder.create();
+            if (constructores == null)
+                return null;
+            if (constructores.getList().size() == 0) {
+                System.out.println("WARNING (IO): Clase sin constructores pï¿½blicos: "
+                        + type.getType());
+                return null;
+            }
+            MultipleMethodInputTab mmi = new MultipleMethodInputTab(constructores, this);
+            MethodDialog dlg = new MethodDialog(this.ioFrame, this.ioFrame.getTitle() + " ("
+                    + type.getType() + " - " + type.getMsg() + ")", mmi, true);
+            // dlg.pack();
+            dlg.setVisible(true);
+            if (dlg.isSetters()) {
+                if (constructores.getActive() == null) {
 
-	public Object[] readForm(String[] clases, String[] msgs) {
-		if (clases == null) return null;
-		if (msgs != null && clases.length != msgs.length) {
-			System.out.println("WARNING (IO): Los tamaños de los arrays no coinciden: " + clases.length + "-"
-					+ msgs.length);
-			return null;
-		}
-		InputType[] types = new InputType[clases.length];
-		for (int i = 0; i < clases.length; i++) {
-			if (msgs != null)
-				types[i] = new InputType(clases[i], msgs[i]);
-			else
-				types[i] = new InputType(clases[i]);
-		}
-		return this.readFormTypes(types);
-	}
+                } else
+                    this.setters(constructores.getActive().getReturnValue(), type.getType() + " - "
+                            + type.getMsg());
+            }
+            dlg.dispose();
+            ioFrame.removeLocationDialog();
+            if (constructores.getActive() == null)
+                return null;
+            return constructores.getActive().getReturnValue();
+        }
+    }
 
-	public Object[] readForm(Class<?>[] clases, String[] msgs) {
-		if (clases == null) return null;
-		String[] clasesNames = new String[clases.length];
-		for (int i = 0; i < clasesNames.length; i++) {
-			clasesNames[i] = clases[i].getName();
-		}
-		return this.readForm(clasesNames, msgs);
-	}
+    /**
+     * @param clases
+     * @return
+     */
+    public Object[] readForm(String[] clases) {
+        return this.readForm(clases, clases);
+    }
 
-	public Object[] readForm(Object[] objs, String[] msgs) {
-		if (objs == null) return null;
-		if (msgs != null && objs.length != msgs.length) {
-			System.out.println("WARNING (IO): Los tamaños de los arrays no coinciden: " + objs.length + "-"
-					+ msgs.length);
-			return null;
-		}
-		InputType[] types = new InputType[objs.length];
-		for (int i = 0; i < objs.length; i++) {
-			if(msgs!=null) types[i] = new InputType(objs[i].getClass().getName(), msgs[i]);
-			else types[i] = new InputType(objs[i].getClass().getName());
-			types[i].setValue(objs[i]);
-		}
-		return this.readFormTypes(types);
-	}
+    public Object[] readForm(Class<?>[] clases) {
+        return this.readForm(clases, null);
+    }
 
-	private Object[] readFormTypes(InputType[] types) {
-		InputPanel[] inputs = new InputPanel[types.length];
-		for (int i = 0; i < inputs.length; i++) {
-			inputs[i] = new FactoryInputPanel().getInputPanel(types[i], this);
-		}
+    public Object[] readForm(Object[] clases) {
+        return this.readForm(clases, null);
+    }
 
-		new MultipleDialog(this.ioFrame, this.ioFrame.getTitle(), inputs).setVisible(true);
-		Object[] values = new Object[types.length];
-		for (int i = 0; i < types.length; i++) {
-			values[i] = types[i].getValue();
-		}
-		return values;
-	}
+    public Object[] readForm(String[] clases, String[] msgs) {
+        if (clases == null)
+            return null;
+        if (msgs != null && clases.length != msgs.length) {
+            System.out.println("WARNING (IO): Los tamaï¿½os de los arrays no coinciden: "
+                    + clases.length + "-" + msgs.length);
+            return null;
+        }
+        InputType[] types = new InputType[clases.length];
+        for (int i = 0; i < clases.length; i++) {
+            if (msgs != null)
+                types[i] = new InputType(clases[i], msgs[i]);
+            else
+                types[i] = new InputType(clases[i]);
+        }
+        return this.readFormTypes(types);
+    }
 
-	public File readOpenFile(String msg, String[] exts) {
-		InputType type = new InputType("java.io.File", "Open " + msg);
-		type.setValues(exts);
-		return (File) this.readType(type);
-	}
+    public Object[] readForm(Class<?>[] clases, String[] msgs) {
+        if (clases == null)
+            return null;
+        String[] clasesNames = new String[clases.length];
+        for (int i = 0; i < clasesNames.length; i++) {
+            clasesNames[i] = clases[i].getName();
+        }
+        return this.readForm(clasesNames, msgs);
+    }
 
-	public File readOpenFile(String msg) {
-		return this.readOpenFile(msg, null);
-	}
+    public Object[] readForm(Object[] objs, String[] msgs) {
+        if (objs == null)
+            return null;
+        if (msgs != null && objs.length != msgs.length) {
+            System.out.println("WARNING (IO): Los tamaï¿½os de los arrays no coinciden: "
+                    + objs.length + "-" + msgs.length);
+            return null;
+        }
+        InputType[] types = new InputType[objs.length];
+        for (int i = 0; i < objs.length; i++) {
+            if (msgs != null)
+                types[i] = new InputType(objs[i].getClass().getName(), msgs[i]);
+            else
+                types[i] = new InputType(objs[i].getClass().getName());
+            types[i].setValue(objs[i]);
+        }
+        return this.readFormTypes(types);
+    }
 
-	public File readOpenFile() {
-		return this.readOpenFile("file", null);
-	}
+    private Object[] readFormTypes(InputType[] types) {
+        InputPanel[] inputs = new InputPanel[types.length];
+        for (int i = 0; i < inputs.length; i++) {
+            inputs[i] = new FactoryInputPanel().getInputPanel(types[i], this);
+        }
 
-	public File readSaveFile(String msg, String[] exts) {
-		InputType type = new InputType("java.io.File", "Save " + msg);
-		type.setValues(exts);
-		return (File) this.readType(type);
-	}
+        new MultipleDialog(this.ioFrame, this.ioFrame.getTitle(), inputs).setVisible(true);
+        Object[] values = new Object[types.length];
+        for (int i = 0; i < types.length; i++) {
+            values[i] = types[i].getValue();
+        }
+        return values;
+    }
 
-	public File readSaveFile(String msg) {
-		return this.readSaveFile(msg, null);
-	}
+    public File readOpenFile(String msg, String[] exts) {
+        InputType type = new InputType("java.io.File", "Open " + msg);
+        type.setValues(exts);
+        return (File) this.readType(type);
+    }
 
-	public File readSaveFile() {
-		return this.readSaveFile("file", null);
-	}
+    public File readOpenFile(String msg) {
+        return this.readOpenFile(msg, null);
+    }
 
-	/**
-	 * Modifica un objeto con los método setters
-	 * 
-	 * @param obj
-	 *           Objeto a modificar
-	 * @param msg
-	 *           Mensaje asociado
-	 * @return Objeto modificado
-	 */
-	public Object setters(Object obj, String msg) {
-		CollectionOfAbstracMethod setters = new SettersBuilder(obj).create();
-		if (setters.getList().size() == 0) {
-			System.out.println("WARNING (IO): Objeto sin setters públicos.");
-			return obj;
-		}
-		MultipleMethodInput mmi = new MultipleMethodInput(setters, this);
-		MethodDialog dlg = new MethodDialog(this.ioFrame, this.ioFrame.getTitle() + " (" + msg + ")", mmi, false);
-		dlg.pack();
-		dlg.setVisible(true);
-		dlg.dispose();
-		ioFrame.removeLocationDialog();
-		return obj;
-	}
+    public File readOpenFile() {
+        return this.readOpenFile("file", null);
+    }
 
-	public void setters(Object obj) {
-		if (obj == null) return;
-		this.setters(obj, obj.getClass().getName());
-	}
+    public File readSaveFile(String msg, String[] exts) {
+        InputType type = new InputType("java.io.File", "Save " + msg);
+        type.setValues(exts);
+        return (File) this.readType(type);
+    }
 
-	/**
-	 * Muestra una selección de objetos para que se elija uno. Se apoya en el
-	 * método toString para mostrar los objetos
-	 * 
-	 * @param objs
-	 *           Array de objetos
-	 * @param msg
-	 *           mensaje asociado
-	 * @return Objeto seleccionado
-	 */
-	public Object select(int min, int max, String msg) {
-		if (min > max) System.out.println("WARNING (IO): El valor mínimo no puede ser superio al valor máximo.");
-		Integer[] valores = new Integer[max + 1 - min];
-		for (int i = 0; i < valores.length; i++)
-			valores[i] = new Integer(i + min);
-		return this.select(valores, msg);
-	}
+    public File readSaveFile(String msg) {
+        return this.readSaveFile(msg, null);
+    }
 
-	public Object select(int max, String msg) {
-		return this.select(0, max, msg);
-	}
+    public File readSaveFile() {
+        return this.readSaveFile("file", null);
+    }
 
-	public Object select(int max) {
-		return this.select(0, max, "Select");
-	}
+    /**
+     * Modifica un objeto con los mï¿½todo setters
+     * 
+     * @param obj Objeto a modificar
+     * @param msg Mensaje asociado
+     * @return Objeto modificado
+     */
+    public Object setters(Object obj, String msg) {
+        CollectionOfAbstracMethod setters = new SettersBuilder(obj).create();
+        if (setters.getList().size() == 0) {
+            System.out.println("WARNING (IO): Objeto sin setters pï¿½blicos.");
+            return obj;
+        }
+        MultipleMethodInput mmi = new MultipleMethodInput(setters, this);
+        MethodDialog dlg = new MethodDialog(this.ioFrame, this.ioFrame.getTitle() + " (" + msg
+                + ")", mmi, false);
+        dlg.pack();
+        dlg.setVisible(true);
+        dlg.dispose();
+        ioFrame.removeLocationDialog();
+        return obj;
+    }
 
-	public Object select(Object[] objs, String msg) {
-		if (objs == null) return null;
-		InputType type = new InputType(msg, objs);
-		new SingleDialog(this.ioFrame, this.ioFrame.getTitle(), new FactoryInputPanel().getInputPanel(type, this))
-				.setVisible(true);
-		return type.getValue();
-	}
+    public void setters(Object obj) {
+        if (obj == null)
+            return;
+        this.setters(obj, obj.getClass().getName());
+    }
 
-	public Object select(Object[] objs) {
-		return this.select(objs, "Select");
-	}
+    /**
+     * Muestra una selecciï¿½n de objetos para que se elija uno. Se apoya en el
+     * mï¿½todo toString para mostrar los objetos
+     * 
+     * @param objs Array de objetos
+     * @param msg mensaje asociado
+     * @return Objeto seleccionado
+     */
+    public Object select(int min, int max, String msg) {
+        if (min > max)
+            System.out
+                    .println("WARNING (IO): El valor mï¿½nimo no puede ser superio al valor mï¿½ximo.");
+        Integer[] valores = new Integer[max + 1 - min];
+        for (int i = 0; i < valores.length; i++)
+            valores[i] = new Integer(i + min);
+        return this.select(valores, msg);
+    }
 
-	// ------------ Lecturas simplificadas----------------------
-	public String readString(String msg) {
-		return (String) this.read("String", msg);
-	}
+    public Object select(int max, String msg) {
+        return this.select(0, max, msg);
+    }
 
-	public String readString() {
-		return this.readString("String");
-	}
+    public Object select(int max) {
+        return this.select(0, max, "Select");
+    }
 
-	public int readInt(String msg) {
-		return (Integer) this.read("Integer", msg);
-	}
+    public Object select(Object[] objs, String msg) {
+        if (objs == null)
+            return null;
+        InputType type = new InputType(msg, objs);
+        new SingleDialog(this.ioFrame, this.ioFrame.getTitle(),
+                new FactoryInputPanel().getInputPanel(type, this)).setVisible(true);
+        return type.getValue();
+    }
 
-	public int readInt() {
-		return this.readInt("Integer");
-	}
+    public Object select(Object[] objs) {
+        return this.select(objs, "Select");
+    }
 
-	public double readDouble(String msg) {
-		return (Double) this.read("Double", msg);
-	}
+    // ------------ Lecturas simplificadas----------------------
+    public String readString(String msg) {
+        return (String) this.read("String", msg);
+    }
 
-	public double readDouble() {
-		return this.readDouble("Double");
-	}
+    public String readString() {
+        return this.readString("String");
+    }
 
-	// =============================== Escrituras ====================
-	public void setLog(Log log) {
-		this.log = log;
-	}
+    public int readInt(String msg) {
+        return (Integer) this.read("Integer", msg);
+    }
 
-	public void setPrintLog(Log log) {
-		this.printLog = log;
-	}
+    public int readInt() {
+        return this.readInt("Integer");
+    }
 
-	// --------------- Salidas ---------------------------------------
-	public void print(Object msg, Log log) {
-		if (this.log == Log.NONE || log == Log.NONE) return;
-		if (log.getLevel() <= this.log.getLevel()) {
-			String prefijo = "";
-			if (log.getLevel() > Log.INFO.getLevel()) prefijo = log.toString() + ">>> ";
-			if (msg == null)
-				this.ioFrame.addText(prefijo + "null");
-			else if (msg.getClass().isArray()) {
-				Array array = new Array(msg);
-				this.ioFrame.addText(prefijo + array.toString());
-			} else
-				this.ioFrame.addText(prefijo + msg.toString());
-		}
-	}
+    public double readDouble(String msg) {
+        return (Double) this.read("Double", msg);
+    }
 
-	public void print(Object msg) {
-		this.print(msg, this.printLog);
-	}
+    public double readDouble() {
+        return this.readDouble("Double");
+    }
 
-	// ------------------- println --------------------------------
-	public void println(Object msg, Log log) {
-		this.print(msg, log);
-		this.print("\r" + "\n", Log.INFO);
-	}
+    // =============================== Escrituras ====================
+    public void setLog(Log log) {
+        this.log = log;
+    }
 
-	public void println(Object msg) {
-		this.println(msg, this.printLog);
-	}
+    public void setPrintLog(Log log) {
+        this.printLog = log;
+    }
 
-	public void println() {
-		this.println("");
-	}
+    // --------------- Salidas ---------------------------------------
+    public void print(Object msg, Log log) {
+        if (this.log == Log.NONE || log == Log.NONE)
+            return;
+        if (log.getLevel() <= this.log.getLevel()) {
+            String prefijo = "";
+            if (log.getLevel() > Log.INFO.getLevel())
+                prefijo = log.toString() + ">>> ";
+            if (msg == null)
+                this.ioFrame.addText(prefijo + "null");
+            else if (msg.getClass().isArray()) {
+                Array array = new Array(msg);
+                this.ioFrame.addText(prefijo + array.toString());
+            } else
+                this.ioFrame.addText(prefijo + msg.toString());
+        }
+    }
 
-	// -------------------- otros ----------------------------------
-	public void clear() {
-		this.ioFrame.clear();
-	}
+    public void print(Object msg) {
+        this.print(msg, this.printLog);
+    }
 
-	// ========================================================================
+    // ------------------- println --------------------------------
+    public void println(Object msg, Log log) {
+        this.print(msg, log);
+        this.print("\r" + "\n", Log.INFO);
+    }
 
-	public void setStatusBar(String msg) {
-		ioFrame.setStatusBar(msg);
-	}
+    public void println(Object msg) {
+        this.println(msg, this.printLog);
+    }
 
-	public void addController(Object controlador) {
-		this.addController(controlador, true);
-	}
+    public void println() {
+        this.println("");
+    }
 
-	public void addController(Object controlador, boolean viewButton) {
-		if (controlador == null) return;
-		this.ioFrame.addAction(controlador.getClass().getName(), new ActionBuilder(controlador).create().getList(),
-				viewButton);
-	}
+    // -------------------- otros ----------------------------------
+    public void clear() {
+        this.ioFrame.clear();
+    }
 
-	public void addModel(Object modelo) {
-		if (modelo == null) return;
-		this.ioFrame.addModelo(modelo);
-	}
+    // ========================================================================
 
-	public void setPath(String path) {
-		this.chooser.setCurrentDirectory(new File(path));
-	}
+    public void setStatusBar(String msg) {
+        ioFrame.setStatusBar(msg);
+    }
 
-	public static void main(String[] args) {
-		IO.out.println("Clase IO...");
-	}
+    public void addview(Object view) {
+        this.addView(view, true);
+    }
+
+    public void addView(Object view, boolean viewButton) {
+        if (view == null)
+            return;
+        this.ioFrame.addAction(view.getClass().getName(), new ActionBuilder(view).create()
+                .getList(), viewButton);
+    }
+
+    public void addViewPanel(Object view) {
+        if (view == null)
+            return;
+        this.ioFrame.addViewPanel(view);
+    }
+
+    public void setPath(String path) {
+        this.chooser.setCurrentDirectory(new File(path));
+    }
+
+    public static void main(String[] args) {
+        IO.getIO().println("Clase IO...");
+    }
 }

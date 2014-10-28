@@ -15,6 +15,6 @@ public class Dia {
 	}
 	
 	public static void main (String[] args){
-		IO.in.read("pruebas.Dia","dia");
+		IO.getIO().read("pruebas.Dia","dia");
 	}
 }

@@ -6,43 +6,43 @@ public class DemoIO {
 	public static void main(String[] args) {
 		String[] s = {"uno", "dos", "tres"};
 		
-		IO.out.print(3);
-		IO.out.println();
-		IO.out.println(s);
-		IO.out.println(new Usr("Usuario",(byte)3));
+		IO.getIO().print(3);
+		IO.getIO().println();
+		IO.getIO().println(s);
+		IO.getIO().println(new Usr("Usuario",(byte)3));
 		
-		IO.out.println(IO.in.readString());
-		IO.out.println(IO.in.readString("Dame una cadena"));
-		IO.out.println(IO.in.readInt());
-		IO.out.println(IO.in.readInt("Edad"));
-		IO.out.println(IO.in.readDouble("valor"));
+		IO.getIO().println(IO.getIO().readString());
+		IO.getIO().println(IO.getIO().readString("Dame una cadena"));
+		IO.getIO().println(IO.getIO().readInt());
+		IO.getIO().println(IO.getIO().readInt("Edad"));
+		IO.getIO().println(IO.getIO().readDouble("valor"));
 		
-		IO.out.println(IO.in.read("byte","Un byte..."));
-		IO.out.println(IO.in.read("boolean","Un boolean..."));
-		IO.out.println(IO.in.read("Short","Un Short..."));
-		IO.out.println(IO.in.read("Integer[]","Un array de Integer..."));
-		IO.out.println(IO.in.read("java.util.List<Integer>","Una List de Integer..."));
-		IO.out.println(IO.in.read("pruebas.Usr","Un Usr..."));
+		IO.getIO().println(IO.getIO().read("byte","Un byte..."));
+		IO.getIO().println(IO.getIO().read("boolean","Un boolean..."));
+		IO.getIO().println(IO.getIO().read("Short","Un Short..."));
+		IO.getIO().println(IO.getIO().read("Integer[]","Un array de Integer..."));
+		IO.getIO().println(IO.getIO().read("java.util.List<Integer>","Una List de Integer..."));
+		IO.getIO().println(IO.getIO().read("pruebas.Usr","Un Usr..."));
 		
-		IO.out.println(IO.in.select(10));
-		IO.out.println(IO.in.select(10,"Edad"));
-		IO.out.println(IO.in.select(18,65,"Edad"));
-		IO.out.println(IO.in.select(s));
-		IO.out.println(IO.in.select(s,"Elige..."));
+		IO.getIO().println(IO.getIO().select(10));
+		IO.getIO().println(IO.getIO().select(10,"Edad"));
+		IO.getIO().println(IO.getIO().select(18,65,"Edad"));
+		IO.getIO().println(IO.getIO().select(s));
+		IO.getIO().println(IO.getIO().select(s,"Elige..."));
 		
 		String[] clases={"Byte","String","String[]","pruebas.Usr"};
 		String[] msgs={"Edad","Nombre","Array","Usuario"};
-		IO.out.println(IO.in.readForm(clases,msgs));
+		IO.getIO().println(IO.getIO().readForm(clases,msgs));
 		
 		
-		IO.in.addController(new Controlador());
-		IO.in.addController(new Controlador());	
+		IO.getIO().addview(new Controlador());
+		IO.getIO().addview(new Controlador());	
 		
-		IO.out.setStatusBar("Demo");
+		IO.getIO().setStatusBar("Demo");
 		System.out.println("consola...");
-		//IO.out.clear();
+		//IO.getIO().clear();
 		
-		IO.in.addModel(new Usr());
-		IO.in.addModel(new Usr());
+		IO.getIO().addViewPanel(new Usr());
+		IO.getIO().addViewPanel(new Usr());
 	}
 }
