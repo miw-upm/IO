@@ -31,7 +31,7 @@ public class IO {
 
     private JFileChooser chooser;
 
-    public IO(String tittle) {
+    private IO(String tittle) {
         this.ioFrame = new IOFrame(tittle, this);
         this.log = this.printLog = Log.INFO;
         this.chooser = new JFileChooser();
@@ -63,7 +63,7 @@ public class IO {
      * @param clase Nombre de la clase que se quiere leer
      * @param msg Mensaje asociado
      * @return Instancia de la clase leida, o null si existen errores o se
-     *         cancel�
+     *         cancela
      */
     public Object read(String clase, String msg) {
         InputType type = new InputType(clase, msg);
@@ -75,7 +75,7 @@ public class IO {
     }
 
     /**
-     * @param obj Objeto que se quiere leer, se utiliza como valor inicial. S�lo
+     * @param obj Objeto que se quiere leer, se utiliza como valor inicial. Sólo
      *            funciona con los Wrappers
      * @param msg
      * @return
@@ -88,7 +88,6 @@ public class IO {
 
     private Object readType(InputType type) {
         if (type.isSingle() || type.isCollection() || type.isArray() || type.isObject()) {
-
             new SingleDialog(this.ioFrame, this.ioFrame.getTitle(),
                     new FactoryInputPanel().getInputPanel(type, this)).setVisible(true);
             return type.getValue();
@@ -131,18 +130,34 @@ public class IO {
     }
 
     public Object[] readForm(Class<?>[] clases) {
-        return this.readForm(clases, null);
+        if (clases != null) {
+            String[] msgs = new String[clases.length];
+            for (int i = 0; i < msgs.length; i++) {
+                msgs[i] = clases[i].getSimpleName();
+            }
+            return this.readForm(clases, msgs);
+        } else {
+            return null;
+        }
     }
 
     public Object[] readForm(Object[] clases) {
-        return this.readForm(clases, null);
+        if (clases != null) {
+            String[] msgs = new String[clases.length];
+            for (int i = 0; i < msgs.length; i++) {
+                msgs[i] = clases[i].getClass().getSimpleName();
+            }
+            return this.readForm(clases, msgs);
+        } else {
+            return null;
+        }
     }
 
     public Object[] readForm(String[] clases, String[] msgs) {
         if (clases == null)
             return null;
         if (msgs != null && clases.length != msgs.length) {
-            System.out.println("WARNING (IO): Los tama�os de los arrays no coinciden: "
+            System.out.println("WARNING (IO): Los tamaños de los arrays no coinciden: "
                     + clases.length + "-" + msgs.length);
             return null;
         }
@@ -228,7 +243,7 @@ public class IO {
     }
 
     /**
-     * Modifica un objeto con los m�todo setters
+     * Modifica un objeto con los método setters
      * 
      * @param obj Objeto a modificar
      * @param msg Mensaje asociado
@@ -237,7 +252,7 @@ public class IO {
     public Object setters(Object obj, String msg) {
         CollectionOfAbstracMethod setters = new SettersBuilder(obj).create();
         if (setters.getList().size() == 0) {
-            System.out.println("WARNING (IO): Objeto sin setters p�blicos.");
+            System.out.println("WARNING (IO): Objeto sin setters públicos.");
             return obj;
         }
         MultipleMethodInput mmi = new MultipleMethodInput(setters, this);
@@ -257,8 +272,8 @@ public class IO {
     }
 
     /**
-     * Muestra una selecci�n de objetos para que se elija uno. Se apoya en el
-     * m�todo toString para mostrar los objetos
+     * Muestra una selección de objetos para que se elija uno. Se apoya en el
+     * método toString para mostrar los objetos
      * 
      * @param objs Array de objetos
      * @param msg mensaje asociado
@@ -267,7 +282,7 @@ public class IO {
     public Object select(int min, int max, String msg) {
         if (min > max)
             System.out
-                    .println("WARNING (IO): El valor m�nimo no puede ser superio al valor m�ximo.");
+                    .println("WARNING (IO): El valor mínimo no puede ser superio al valor máximo.");
         Integer[] valores = new Integer[max + 1 - min];
         for (int i = 0; i < valores.length; i++)
             valores[i] = new Integer(i + min);
@@ -392,8 +407,8 @@ public class IO {
             this.ioFrame.addViewPanel(view);
         }
     }
-    
-    public void setEnabledButton(String name, boolean b){
+
+    public void setEnabledButton(String name, boolean b) {
         this.ioFrame.setEnablebButton(name, b);
     }
 

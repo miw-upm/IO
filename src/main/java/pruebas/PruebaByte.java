@@ -5,7 +5,7 @@ import upm.jbb.IO;
 public class PruebaByte {
 
 	public static void main(String[] args) {
-	   IO io = new IO("uno");
+	   IO io = IO.getIO("uno");
 	   io.readInt("edad");
 	   io.println("ddd");
 		//IO.out.println(IO.in.read("Byte","Byte"));
