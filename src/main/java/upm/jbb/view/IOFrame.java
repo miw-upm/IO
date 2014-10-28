@@ -2,6 +2,7 @@ package upm.jbb.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -25,14 +26,14 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
+import javax.swing.JToolBar;
 
 import upm.jbb.IO;
-
 import upm.jbb.reflect.AbstractMethod;
 import upm.jbb.reflect.MethodBuilder;
 
 public class IOFrame extends JFrame implements ActionListener, WindowListener {
-	private static final String VERSION = "� Jes�s Bernal Berm�dez (versi�n: 5.3, junio-2012)";
+	private static final String VERSION = "© Jesús Bernal Bermúdez (versión: 5.5, noviembre-2014)";
 
 	private static final long serialVersionUID = 1L;
 	private static int locationFrame = 0;
@@ -126,10 +127,10 @@ public class IOFrame extends JFrame implements ActionListener, WindowListener {
 
 		JMenu mClass = new JMenu("Class");
 		mBar.add(mClass);
-		JMenuItem mCreateActions = new JMenuItem("Add Controler", KeyEvent.VK_C);
+		JMenuItem mCreateActions = new JMenuItem("Add View", KeyEvent.VK_C);
 		mCreateActions.addActionListener(this);
 		mClass.add(mCreateActions);
-		JMenuItem mCreateMethods = new JMenuItem("Add Model", KeyEvent.VK_M);
+		JMenuItem mCreateMethods = new JMenuItem("Add View Panel", KeyEvent.VK_M);
 		mCreateMethods.addActionListener(this);
 		mClass.add(mCreateMethods);
 
@@ -190,24 +191,42 @@ public class IOFrame extends JFrame implements ActionListener, WindowListener {
 
 	public void addAction(String name, List<AbstractMethod> list, boolean createBar) {
 		//ToolBarPanel pnlToolBar= new ToolBarPanel();
+	    JToolBar tool= new JToolBar(name);
 		JMenu menuView = new JMenu(name);
 		this.mView.add(menuView);
 		JMenu menuActions = new JMenu(name);
 		this.mActions.add(menuActions);
+		
+		
+		
 		for (ActionCommand action : list) {
 			ActionButton ab = new ActionButton(action);
 			ItemMenu im = new ItemMenu(ab);
-			this.pnlToolBar.add(ab); //this.
+            //this.pnlToolBar.add(ab);
+			tool.add(ab); //--
 			menuView.add(im);
 			menuActions.add(new ActionMenu(action));
 			if (!createBar) im.setSelected(false);
 		}
+		this.pnlToolBar.add(tool);//--
 		this.mActionsView.setSelected(true);
 		this.mActionsView.setEnabled(true);
 		this.setVisible(true);
 		//this.pnlToolBarTabbed.add(name,pnlToolBar);
 	}
-
+	
+    public void setEnablebButton(String name, boolean b){
+        Component[] components = this.pnlToolBar.getComponents();
+        for (Component component : components) {
+            Component[] buttons = ((JToolBar)component).getComponents();
+            for (Component button : buttons) {
+                if(button.getName().equals(name)) {
+                    button.setEnabled(b);
+                }
+            }
+        }
+    }
+    
 	public void addViewPanel(Object modelo) {
 		MultipleMethodInputTab mmi = new MultipleMethodInputTab(new MethodBuilder(modelo).create(), this.io);
 		this.pestania.addTab(modelo.getClass().getName(), mmi);

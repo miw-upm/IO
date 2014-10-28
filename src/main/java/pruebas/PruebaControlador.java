@@ -6,7 +6,8 @@ public class PruebaControlador {
 
 	public static void main(String[] args) {
 		IO.getIO().addview(new Contro2());
-		IO.getIO().addView(new Controlador(),false);
+        IO.getIO().addView(new Controlador(),true);
+        IO.getIO().addView(new Controlador(),true);
 	}
 
 }

@@ -43,7 +43,7 @@ public class IO {
         }
         return ios.get(key);
     }
-    
+
     public static IO getIO() {
         return IO.getIO("Input/Output");
     }
@@ -381,16 +381,20 @@ public class IO {
     }
 
     public void addView(Object view, boolean viewButton) {
-        if (view == null)
-            return;
-        this.ioFrame.addAction(view.getClass().getName(), new ActionBuilder(view).create()
-                .getList(), viewButton);
+        if (view != null) {
+            this.ioFrame.addAction(view.getClass().getName(), new ActionBuilder(view).create()
+                    .getList(), viewButton);
+        }
     }
 
     public void addViewPanel(Object view) {
-        if (view == null)
-            return;
-        this.ioFrame.addViewPanel(view);
+        if (view != null) {
+            this.ioFrame.addViewPanel(view);
+        }
+    }
+    
+    public void setEnabledButton(String name, boolean b){
+        this.ioFrame.setEnablebButton(name, b);
     }
 
     public void setPath(String path) {
