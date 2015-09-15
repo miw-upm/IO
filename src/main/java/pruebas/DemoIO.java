@@ -35,8 +35,8 @@ public class DemoIO {
 		IO.getIO().println(IO.getIO().readForm(clases,msgs));
 		
 		
-		IO.getIO().addview(new Controlador());
-		IO.getIO().addview(new Controlador());	
+		IO.getIO().addView(new Controlador());
+		IO.getIO().addView(new Controlador());	
 		
 		IO.getIO().setStatusBar("Demo");
 		System.out.println("consola...");

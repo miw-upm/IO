@@ -391,7 +391,7 @@ public class IO {
         ioFrame.setStatusBar(msg);
     }
 
-    public void addview(Object view) {
+    public void addView(Object view) {
         this.addView(view, true);
     }
 

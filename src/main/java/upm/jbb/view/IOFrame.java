@@ -286,7 +286,7 @@ public class IOFrame extends JFrame implements ActionListener, WindowListener {
 			JOptionPane.showMessageDialog(this, VERSION, "Acerca De", JOptionPane.INFORMATION_MESSAGE);
 			// ------ Open File...------------------------------------
 		} else if (ae.getActionCommand().equals("Add Controler")) {
-			io.addview(this.io.read("Object", "Actions"));
+			io.addView(this.io.read("Object", "Actions"));
 		} else if (ae.getActionCommand().equals("Add Model")) {
 			io.addViewPanel(this.io.read("Object", "Model"));
 		}
