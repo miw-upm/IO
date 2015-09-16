@@ -10,7 +10,7 @@ public abstract class AbstractMethod implements ActionCommand {
 	private String returnType;
 	private Object returnValue;
 	private String error;
-	// Para indicar en la colección el último método que se ejecutó
+	// Para indicar en la colecciÃ³n el Ãºltimo mÃ©todo que se ejecutÃ³
 	private CollectionOfAbstracMethod owner;
 
 	public AbstractMethod(String name, Object instancia, List<InputType> params, String returnType,

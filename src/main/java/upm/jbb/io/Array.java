@@ -15,7 +15,7 @@ public class Array {
 			this.array = array;
 			InputType inputType = new InputType(array.getClass().getSimpleName());
 			this.nameType = inputType.arrayType();
-		} else System.out.println("DEBUG (Array): el par·metro no es una array");
+		} else System.out.println("DEBUG (Array): el par√°metro no es una array");
 	}
 
 	public Object getArray() {

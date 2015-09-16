@@ -1,7 +1,7 @@
 package upm.jbb.io;
 
 /**
- * Representa los datos b·sicos de una clase. Realiza procesamiento de
+ * Representa los datos b√°sicos de una clase. Realiza procesamiento de
  * pertenencia a grupos
  * 
  */
@@ -39,7 +39,7 @@ public class InputType {
 		type = type.replaceAll("java.lang.", "");
 
 		// De "class paquete.MiClase" a "paquete.Clase"
-		// ".+" significa cualquier caracter, una o m·s veces
+		// ".+" significa cualquier caracter, una o m√°s veces
 		if (type.matches("class .+"))
 			type = type.substring(6);
 

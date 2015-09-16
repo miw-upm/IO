@@ -9,7 +9,7 @@ import upm.jbb.io.Array;
 import upm.jbb.io.InputType;
 import upm.jbb.io.InputTypeListener;
 /**
- * Representa una vista gr·fica para introducir entradas, va acompaÒada de un
+ * Representa una vista gr√°fica para introducir entradas, va acompa√±ada de un
  * mensaje y un campo de error Es la vista de la clase InputType
  * 
  * @author jbernal

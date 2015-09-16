@@ -28,7 +28,7 @@ public class SettersBuilder extends AbstractMethodBuilder {
 							+ ")");
 					continue;
 				} else if (metodo.getGenericParameterTypes().length != 1) {
-					System.out.println("WARNING (IOClass): setter con par·metros <> 1 ("
+					System.out.println("WARNING (IOClass): setter con par√°metros <> 1 ("
 							+ metodo.getName() + ")");
 					continue;
 				} else if (!metodo.getReturnType().getName().equals("void")) {

@@ -23,7 +23,7 @@ public class MethodDialog extends JDialog implements WindowListener, ActionListe
 		super(owner, title, ModalityType.APPLICATION_MODAL);
 		this.getContentPane().setLayout(new BorderLayout());
 		this.setters = new JCheckBox(
-				"Utilizar los métodos setters para terminar de inicializar la instancia", false);
+				"Utilizar los mÃ©todos setters para terminar de inicializar la instancia", false);
 		if (isConstructor) this.add(this.setters, BorderLayout.NORTH);
 		this.add(centro, BorderLayout.CENTER);
 		JPanel sur = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));

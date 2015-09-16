@@ -23,7 +23,7 @@ public class GettersBuilder extends AbstractMethodBuilder {
 								+ metodo.getName() + ")");
 					continue;
 				} else if (metodo.getGenericParameterTypes().length > 0) {
-					System.out.println("WARNING (IOClass): getter con par·metros ("
+					System.out.println("WARNING (IOClass): getter con par√°metros ("
 							+ metodo.getName() + ")");
 					continue;
 				} else if (metodo.getReturnType().getName().equals("void")) {
